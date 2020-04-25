@@ -1,4 +1,9 @@
-﻿<!-- HTML for static distribution bundle build -->
+﻿@using Microsoft.Extensions.Options;
+@using Newtonsoft.Json;
+@using Swagger.UI.Hub.Models;
+
+@inject IOptions<ServicesConfig> _servicesConfig;
+<!-- HTML for static distribution bundle build -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -58,11 +63,9 @@
 
             // Build a system
             const ui = SwaggerUIBundle({
-                urls: [
-                    { url: "https://petstore.swagger.io/v2/swagger.json", name: "Pets" },
-                    { url: "https://idratherbewriting.com/learnapidoc/docs/rest_api_specifications/openapi_openweathermap.yml", name: "Weather" },
-                ],
-                "urls.primaryName": "Pets",
+                urls:
+                @(Html.Raw(JsonConvert.SerializeObject(_servicesConfig.Value.Services.Select(c=> new { url = c.Url.ToString(), name = c.Name }),Formatting.Indented))),
+                "urls.primaryName": "@(_servicesConfig.Value.Services.SingleOrDefault(c=>c.Default)?.Name ?? _servicesConfig.Value.Services.FirstOrDefault()?.Name)",
                 dom_id: '#swagger-ui',
                 deepLinking: true,
                 presets: [
