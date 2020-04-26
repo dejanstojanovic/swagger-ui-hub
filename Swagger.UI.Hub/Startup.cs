@@ -22,12 +22,24 @@ namespace Swagger.UI.Hub
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IValidatorFactory, ValidatorFactory>();
+            //services.AddSingleton<IValidatorFactory, ValidatorFactory>();
+
+            services.AddSingleton<AbstractValidator<ServicesConfig>, ServicesConfigValidation>();
+
+
             services.Configure<ServicesConfig>(Configuration.GetSection(nameof(ServicesConfig)));
+
+
 
             services.AddSingleton<ServicesConfig>(container =>
             {
-                return container.GetService<IOptions<ServicesConfig>>().Value;
+                var config = container.GetService<IOptions<ServicesConfig>>().Value;
+                //var validator = container.GetService<IValidatorFactory>().GetValidator<ServicesConfig>();
+                var validator = container.GetService<AbstractValidator<ServicesConfig>>();
+                validator.Validate(config);
+
+
+                return config;
             });
 
             services.AddControllersWithViews();
