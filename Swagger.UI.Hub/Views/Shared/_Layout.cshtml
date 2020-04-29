@@ -2,7 +2,7 @@
 @using Newtonsoft.Json;
 @using Swagger.UI.Hub.Models;
 
-@inject IOptions<ServicesConfig> _servicesConfig;
+@inject ServicesConfig _servicesConfig;
 <!-- HTML for static distribution bundle build -->
 <!DOCTYPE html>
 <html lang="en">
@@ -64,8 +64,8 @@
             // Build a system
             const ui = SwaggerUIBundle({
                 urls:
-                @(Html.Raw(JsonConvert.SerializeObject(_servicesConfig.Value.Services.Select(c=> new { url = c.Url.ToString(), name = c.Name }),Formatting.Indented))),
-                "urls.primaryName": "@(_servicesConfig.Value.Services.SingleOrDefault(c=>c.Default)?.Name ?? _servicesConfig.Value.Services.FirstOrDefault()?.Name)",
+                @(Html.Raw(JsonConvert.SerializeObject(_servicesConfig.Services.Select(c=> new { url = c.Url.ToString(), name = c.Name }),Formatting.Indented))),
+                "urls.primaryName": "@(_servicesConfig.Services.SingleOrDefault(c=>c.Default)?.Name ?? _servicesConfig.Services.FirstOrDefault()?.Name)",
                 dom_id: '#swagger-ui',
                 deepLinking: true,
                 presets: [

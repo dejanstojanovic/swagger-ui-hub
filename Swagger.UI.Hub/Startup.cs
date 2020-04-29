@@ -24,12 +24,9 @@ namespace Swagger.UI.Hub
         {
             //services.AddSingleton<IValidatorFactory, ValidatorFactory>();
 
-            services.AddSingleton<AbstractValidator<ServicesConfig>, ServicesConfigValidation>();
-
-
             services.Configure<ServicesConfig>(Configuration.GetSection(nameof(ServicesConfig)));
-
-
+            services.AddSingleton<AbstractValidator<ServicesConfig>, ServicesConfigValidation>();
+            
 
             services.AddSingleton<ServicesConfig>(container =>
             {
